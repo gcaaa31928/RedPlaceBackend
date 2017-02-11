@@ -12,6 +12,11 @@ module.exports = {
             friendId: '2',
             createdAt: new Date(),
             updatedAt: new Date()
+        },{
+            userId: '2',
+            friendId: '3',
+            createdAt: new Date(),
+            updatedAt: new Date()
         }], {});
     },
 

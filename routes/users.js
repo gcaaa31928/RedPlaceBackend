@@ -3,10 +3,30 @@ var express = require('express');
 var router = express.Router();
 
 /* GET users listing. */
+router.post('/create', function (req, res, next) {
+    console.log(req.body);
+    models.User.create({
+        name: req.body.name
+    }).then(function () {
+        res.status(200);
+        res.send({status: 200});
+    });
+});
+
+
 router.get('/', function (req, res, next) {
     models.User.findAll({
-        include: [models.UserFriend]
-    }).then(function(users) {
+        attributes: ['uuid', 'name'],
+        include: [{
+            model: models.UserFriend,
+            attributes: ['friendId'],
+            include: [{
+                model: models.User,
+                as: 'friend',
+                attributes: ['uuid', 'name']
+            }]
+        }]
+    }).then(function (users) {
         res.send(users);
     });
 });
