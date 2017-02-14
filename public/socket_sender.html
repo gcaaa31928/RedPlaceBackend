@@ -1,0 +1,13 @@
+<script src="socket.io-client/dist/socket.io.js"></script>
+<script>
+    var socket = io();
+    var ID = "1234567890";
+    setInterval(function() {
+        socket.emit('send location', {
+            room: ID,
+            latitude: 123,
+            longitude: 123,
+            orientation: 20
+        });
+    }, 4000);
+</script>

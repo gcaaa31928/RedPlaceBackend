@@ -1,0 +1,9 @@
+<script src="socket.io-client/dist/socket.io.js"></script>
+<script>
+    var socket = io();
+    var ID = "1234567890";
+    socket.emit('subscribe', ID);
+    socket.on('receive location', function(data) {
+        console.log(data);
+    });
+</script>
