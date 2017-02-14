@@ -2,7 +2,6 @@ var models = require('../models');
 var express = require('express');
 var router = express.Router();
 
-/* GET users listing. */
 router.post('/create', function (req, res, next) {
     console.log(req.body);
     models.User.create({
@@ -13,6 +12,12 @@ router.post('/create', function (req, res, next) {
     });
 });
 
+router.post('/friends/create', function(req, res, next) {
+    models.UserFriend.create({
+        userId: req.body.userId,
+        friendId: req.body.friendId
+    });
+});
 
 router.get('/', function (req, res, next) {
     models.User.findAll({
