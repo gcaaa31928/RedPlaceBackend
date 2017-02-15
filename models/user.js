@@ -1,4 +1,6 @@
 'use strict';
+var logger = require('../utils/logger');
+
 module.exports = function (sequelize, DataTypes) {
     var User = sequelize.define('User', {
         name: DataTypes.STRING,
@@ -19,6 +21,16 @@ module.exports = function (sequelize, DataTypes) {
                     foreignKey: 'userId'
                 });
                 // associations can be defined here
+            }
+        },
+        instanceMethods: {
+            hasFriend: function(friendUUID) {
+                logger.error("call");
+                this.getFriends({
+                    where: {friendId: friendUUID}
+                }).then(function(friend) {
+                    logger.debug(friend);
+                });
             }
         }
     });

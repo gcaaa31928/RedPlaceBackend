@@ -6,10 +6,11 @@ module.exports = function (sequelize, DataTypes) {
     }, {
         classMethods: {
             associate: function (models) {
+                // UserFriend.belongsTo(models.User);
                 UserFriend.belongsTo(models.User, {
                     foreignKey: 'userId'
                 });
-                UserFriend.belongsTo(models.User, {
+                UserFriend.hasOne(models.User, {
                     as: 'friend',
                     foreignKey: 'friendId'
                 });
