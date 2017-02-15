@@ -1,15 +1,17 @@
 var logger = require('../utils/logger');
+var models = require('../models');
 function MapHanlder(server) {
     this.io = require('socket.io')(server);
 
-    this.subscribe = function (socket, room) {
-        logger.debug("subscribe room:" + room);
-        socket.join(room);
+    this.subscribe = function (socket, friendId) {
+        logger.debug("subscribe room:" + friendId);
+
+        socket.join(friendId);
     };
 
     this.sendLocation = function (socket, data) {
         logger.debug("sending location:" + data);
-        socket.broadcast.to(data.room).emit("receive location", {
+        socket.broadcast.to(data.friendId).emit("receive location", {
             latitude: data.latitude,
             longitude: data.longitude,
             orientation: data.orientation
