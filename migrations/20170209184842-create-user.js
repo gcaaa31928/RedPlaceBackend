@@ -10,6 +10,10 @@ module.exports = {
                 type: Sequelize.STRING,
                 unique: true
             },
+            accessToken: {
+                type: Sequelize.STRING,
+                allowNull: true
+            },
             name: {
                 type: Sequelize.STRING
             },
