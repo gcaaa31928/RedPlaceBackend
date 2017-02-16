@@ -17,18 +17,19 @@ module.exports = function (sequelize, DataTypes) {
     }, {
         classMethods: {
             associate: function (models) {
-                User.hasMany(models.UserFriend, {
-                    foreignKey: 'userId'
+                User.belongsToMany(models.User, {
+                    as: 'friends',
+                    foreignKey: 'userId',
+                    otherKey: 'friendId',
+                    through: 'UserFriends'
                 });
                 // associations can be defined here
             }
         },
         instanceMethods: {
-            hasFriend: function(friendUUID) {
-                logger.error("call");
-                this.getFriends({
-                    where: {friendId: friendUUID}
-                }).then(function(friend) {
+            hasThisFriend: function(friendUUID) {
+                logger.debug("call");
+                this.getFriends().then(function(friend) {
                     logger.debug(friend);
                 });
             }

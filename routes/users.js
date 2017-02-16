@@ -4,14 +4,16 @@ var UUID = require('uuid-js');
 var router = express.Router();
 var logger = require('../utils/logger');
 var async = require('async');
-
-router.get('/test', function (req, res, next) {
-    models.User.findOne({
-        where: {uuid: "0"}
-    }).then(function (user) {
-        user.hasFriend("1");
-    });
-});
+//
+// router.get('/test', function (req, res, next) {
+//     models.User.findOne({
+//         where: {uuid: "0"}
+//     }).then(function (user) {
+//         user.hasFriend("4").then(function(result) {
+//             logger.debug(result);
+//         });
+//     });
+// });
 
 
 router.post('/login', function (req, res, next) {

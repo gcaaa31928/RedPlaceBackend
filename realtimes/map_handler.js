@@ -4,9 +4,12 @@ function MapHanlder(server) {
     this.io = require('socket.io')(server);
 
     this.subscribe = function (socket, friendId) {
-        logger.debug("subscribe room:" + friendId);
-
-        socket.join(friendId);
+        models.Users.hasFriend(friendId).then(function(result) {
+            if (result) {
+                logger.debug("subscribe room:" + friendId);
+                socket.join(friendId);
+            }
+        });
     };
 
     this.sendLocation = function (socket, data) {
