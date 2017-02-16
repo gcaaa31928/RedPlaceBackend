@@ -1,4 +1,7 @@
 
+*.sqlite3
+
+
 ### Node template
 # Logs
 logs
