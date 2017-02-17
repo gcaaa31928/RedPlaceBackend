@@ -15,7 +15,6 @@ var async = require('async');
 //     });
 // });
 
-
 router.post('/login', function (req, res, next) {
     async.waterfall([
         function (callback) {
@@ -62,8 +61,36 @@ router.post('/login', function (req, res, next) {
 
 });
 
+router.post('*', function (req, res, next) {
+    models.User.findOne({
+        where: {accessToken: req.headers.accessToken}
+    }).then(function (user) {
+        if (user === null) {
+            res.status(403).send("access token is wrong");
+        } else {
+            next();
+        }
+    }).catch(function (err) {
+        res.status(500).send(err);
+    });
+});
 
-router.post('/friends/create', function (req, res, next) {
+
+router.post('/my/friends/add', function (req, res, next) {
+    models.User.findOne({
+        where: {accessToken: req.headers.accesstoken}
+    }).then(function(user) {
+        models.UserFriend.create({
+            userId: user.uuid,
+            friendId: friendId
+        }.then(function() {
+            res.status(200).send({response: "ok"});
+        }).catch(function(err) {
+            res.status(500).send(err);
+        });
+    }).catch(function(err) {
+        res.status(500).send(err);
+    };
     models.UserFriend.create({
         userId: req.body.userId,
         friendId: req.body.friendId
@@ -89,24 +116,18 @@ router.get('/', function (req, res, next) {
 });
 
 
-router.get('/:userId', function (req, res, next) {
+router.get('/my/friends', function (req, res, next) {
     models.User.findOne({
-        where: {uuid: req.params.userId},
-        attributes: ['uuid', 'name', 'email'],
-        include: [{
-            model: models.UserFriend,
-            attributes: ['friendId'],
-            include: [{
-                model: models.User,
-                as: 'friend',
-                attributes: ['uuid', 'name']
-            }]
-        }]
+        where: {accessToken: req.headers.accesstoken}
     }).then(function (user) {
         if (user === null)
-            res.status(204).send({});
-        else
-            res.status(200).send(user);
+            res.status(502).send("you are not exists");
+        user.getFriends().then(function(friends) {
+            res.status(200).send(friends);
+        });
+    }).catch(function (err) {
+        logger.error(err);
+        res.status(500).send(err);
     });
 });
 module.exports = router;
