@@ -33,6 +33,7 @@ router.post('/login', function (req, res, next) {
                 models.User.create({
                     name: req.body.name,
                     email: req.body.email,
+                    photoUrl: req.body.photoUrl,
                     accessToken: accessToken
                 }).then(function (user) {
                     res.status(200).send({accessToken: accessToken});
@@ -42,6 +43,8 @@ router.post('/login', function (req, res, next) {
                 });
             } else {
                 user.updateAttributes({
+                    name: req.body.name,
+                    photoUrl: req.body.photoUrl,
                     accessToken: accessToken
                 }).then(function (user) {
                     res.status(200).send({accessToken: accessToken});

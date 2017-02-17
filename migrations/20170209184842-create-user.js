@@ -10,6 +10,10 @@ module.exports = {
                 type: Sequelize.STRING,
                 unique: true
             },
+            photoUrl: {
+                type: Sequelize.STRING,
+                allowNull: true
+            },
             accessToken: {
                 type: Sequelize.STRING,
                 allowNull: true

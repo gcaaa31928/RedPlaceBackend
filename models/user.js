@@ -8,6 +8,9 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.STRING,
             allowNull: false
         },
+        photoUrl: {
+            type: DataTypes.STRING
+        },
         accessToken: DataTypes.STRING,
         uuid: {
             type: DataTypes.UUID,
@@ -27,12 +30,7 @@ module.exports = function (sequelize, DataTypes) {
             }
         },
         instanceMethods: {
-            hasThisFriend: function(friendUUID) {
-                logger.debug("call");
-                this.getFriends().then(function(friend) {
-                    logger.debug(friend);
-                });
-            }
+
         }
     });
     return User;
