@@ -18,6 +18,10 @@ module.exports = {
                 type: Sequelize.STRING,
                 allowNull: true
             },
+            friendToken: {
+                type: Sequelize.STRING,
+                allowNull: true
+            },
             name: {
                 type: Sequelize.STRING
             },

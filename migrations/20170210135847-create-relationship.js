@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
     up: function (queryInterface, Sequelize) {
-        return queryInterface.createTable('UserFriends', {
+        return queryInterface.createTable('Relationships', {
             id: {
                 type: Sequelize.INTEGER,
                 primaryKey: true,
@@ -21,6 +21,7 @@ module.exports = {
                     key: 'uuid'
                 }
             },
+
             createdAt: {
                 allowNull: false,
                 type: Sequelize.DATE
@@ -32,6 +33,6 @@ module.exports = {
         });
     },
     down: function (queryInterface, Sequelize) {
-        return queryInterface.dropTable('UserFriends');
+        return queryInterface.dropTable('Relationships');
     }
 };

@@ -1,6 +1,6 @@
 'use strict';
 module.exports = function (sequelize, DataTypes) {
-    var UserFriend = sequelize.define('UserFriend', {
+    var Relationship = sequelize.define('Relationship', {
         userId: {
             type: DataTypes.UUID,
             references: {
@@ -23,5 +23,5 @@ module.exports = function (sequelize, DataTypes) {
             }
         }
     });
-    return UserFriend;
+    return Relationship;
 };

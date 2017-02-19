@@ -12,6 +12,7 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.STRING
         },
         accessToken: DataTypes.STRING,
+        friendToken: DataTypes.STRING,
         uuid: {
             type: DataTypes.UUID,
             defaultValue: DataTypes.UUIDV1,
@@ -24,7 +25,7 @@ module.exports = function (sequelize, DataTypes) {
                     as: 'friends',
                     foreignKey: 'userId',
                     otherKey: 'friendId',
-                    through: 'UserFriends'
+                    through: 'Relationships'
                 });
                 // associations can be defined here
             }

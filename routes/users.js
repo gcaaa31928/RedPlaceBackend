@@ -61,39 +61,71 @@ router.post('/login', function (req, res, next) {
 
 });
 
-router.post('*', function (req, res, next) {
-    models.User.findOne({
-        where: {accessToken: req.headers.accessToken}
-    }).then(function (user) {
-        if (user === null) {
-            res.status(403).send("access token is wrong");
-        } else {
-            next();
-        }
+// router.post('*', function (req, res, next) {
+//     models.User.findOne({
+//         where: {accessToken: req.headers.accessToken}
+//     }).then(function (user) {
+//         if (user === null) {
+//             res.status(403).send("access token is wrong");
+//         } else {
+//             next();
+//         }
+//     }).catch(function (err) {
+//         res.status(500).send(err);
+//     });
+// });
+
+router.post('/my/friend_token', function (req, res, next) {
+    var friendToken = UUID.create().toString().replace(/-/g, "");
+    models.User.update(
+        {friendToken: friendToken},
+        {where: {accessToken: req.headers.accesstoken}}
+    ).then(function (user) {
+        res.status(200).send({friendToken: friendToken});
     }).catch(function (err) {
-        res.status(500).send(err);
+        res.status(502).send(err);
     });
 });
 
-
 router.post('/my/friends/add', function (req, res, next) {
-    models.User.findOne({
-        where: {accessToken: req.headers.accesstoken}
-    }).then(function(user) {
-        models.UserFriend.create({
-            userId: user.uuid,
-            friendId: friendId
-        }.then(function() {
-            res.status(200).send({response: "ok"});
-        }).catch(function(err) {
-            res.status(500).send(err);
-        });
-    }).catch(function(err) {
-        res.status(500).send(err);
-    };
-    models.UserFriend.create({
-        userId: req.body.userId,
-        friendId: req.body.friendId
+    async.waterfall([
+        function (callback) {
+            models.User.findOne({
+                where: {accessToken: req.headers.accesstoken}
+            }).then(function (user) {
+                callback(null, user);
+            }).catch(function (err) {
+                logger.debug(err);
+
+                callback(err);
+            });
+        },
+        function (user, callback) {
+            models.User.findOne({
+                where: {friendToken: req.body.friendToken}
+            }).then(function (friend) {
+                callback(null, user, friend);
+            }).catch(function (err) {
+                callback(err);
+            });
+        },
+        function (user, friend, callback) {
+            user.hasFriend(friend).then(function (result) {
+                if (result === false)
+                    user.addFriend(friend);
+                friend.hasFriend(user).then(function (result) {
+                    if (result === false)
+                        friend.addFriend(user);
+                    res.status(200).send({response: "ok"});
+                }).catch(function (err) {
+                    callback(err);
+                });
+            }).catch(function (err) {
+                callback(err);
+            });
+        }
+    ], function (err, result) {
+        res.status(502).send(err);
     });
 });
 
@@ -122,7 +154,9 @@ router.get('/my/friends', function (req, res, next) {
     }).then(function (user) {
         if (user === null)
             res.status(502).send("you are not exists");
-        user.getFriends().then(function(friends) {
+        user.getFriends({
+            attributes: ['uuid', 'name']
+        }).then(function (friends) {
             res.status(200).send(friends);
         });
     }).catch(function (err) {
