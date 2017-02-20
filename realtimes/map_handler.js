@@ -3,12 +3,18 @@ var models = require('../models');
 function MapHanlder(server) {
     this.io = require('socket.io')(server);
 
-    this.subscribe = function (socket, friendId) {
-        models.Users.hasFriend(friendId).then(function(result) {
-            if (result) {
-                logger.debug("subscribe room:" + friendId);
-                socket.join(friendId);
-            }
+    this.subscribe = function (socket, data) {
+        var friendId = data.friendId;
+        var userId = data.userId;
+        models.Users.findOne({
+            where: {uuid: userId}
+        }).then(function (user) {
+            user.hasFriend(friendId).then(function (result) {
+                if (result) {
+                    logger.debug("subscribe room:" + friendId);
+                    socket.join(friendId);
+                }
+            });
         });
     };
 
@@ -29,12 +35,12 @@ function MapHanlder(server) {
 MapHanlder.prototype.run = function run() {
     var self = this;
     self.io.on('connection', function (socket) {
-        setInterval(function() {
+        setInterval(function () {
             self.io.emit("heartbeat", "heartbeat in:" + new Date().toLocaleString());
         }, 2000);
 
-        socket.on('subscribe', function (room) {
-            this.subscribe(socket, room);
+        socket.on('subscribe', function (data) {
+            this.subscribe(socket, data);
         }.bind(self));
         socket.on('send location', function (data) {
             this.sendLocation(socket, data);
