@@ -155,7 +155,7 @@ router.get('/my/friends', function (req, res, next) {
         if (user === null)
             res.status(502).send("you are not exists");
         user.getFriends({
-            attributes: ['uuid', 'name']
+            attributes: ['uuid', 'name', 'photoUrl']
         }).then(function (friends) {
             res.status(200).send(friends);
         });
