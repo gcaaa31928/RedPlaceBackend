@@ -5,9 +5,9 @@ function MapHanlder(server) {
 
     this.subscribe = function (socket, data) {
         var friendId = data.friendId;
-        var userId = data.userId;
+        var accessToken = data.accessToken;
         models.Users.findOne({
-            where: {uuid: userId}
+            where: {accessToken: accessToken}
         }).then(function (user) {
             user.hasFriend(friendId).then(function (result) {
                 if (result) {
@@ -23,7 +23,8 @@ function MapHanlder(server) {
         socket.broadcast.to(data.friendId).emit("receive location", {
             latitude: data.latitude,
             longitude: data.longitude,
-            orientation: data.orientation
+            orientation: data.orientation,
+            friendId: data.friendId
         })
     };
 

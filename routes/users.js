@@ -35,7 +35,10 @@ router.post('/login', function (req, res, next) {
                     photoUrl: req.body.photoUrl,
                     accessToken: accessToken
                 }).then(function (user) {
-                    res.status(200).send({accessToken: accessToken});
+                    res.status(200).send({
+                        accessToken: accessToken,
+                        uuid: user.uuid
+                    });
                     callback('accept');
                 }).catch(function (err) {
                     callback(err);
@@ -46,7 +49,10 @@ router.post('/login', function (req, res, next) {
                     photoUrl: req.body.photoUrl,
                     accessToken: accessToken
                 }).then(function (user) {
-                    res.status(200).send({accessToken: accessToken});
+                    res.status(200).send({
+                        accessToken: accessToken,
+                        uuid: user.uuid
+                    });
                     callback('accept');
                 }).catch(function (err) {
                     callback(err);
