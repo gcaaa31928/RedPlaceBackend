@@ -6,7 +6,7 @@ function MapHanlder(server) {
     this.subscribe = function (socket, data) {
         var friendId = data.friendId;
         var accessToken = data.accessToken;
-        models.Users.findOne({
+        models.User.findOne({
             where: {accessToken: accessToken}
         }).then(function (user) {
             user.hasFriend(friendId).then(function (result) {
